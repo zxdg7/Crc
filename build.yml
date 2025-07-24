@@ -11,10 +11,10 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4  # 也建议更新到最新版本
     
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5  # 更新到最新版本
       with:
         python-version: '3.9'  # 可以根据需要更改Python版本
     
@@ -28,7 +28,7 @@ jobs:
         pyinstaller --onefile find_crc16.py  # 你的Python文件名
     
     - name: Upload EXE artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4  # 这里更新到了v4版本
       with:
         name: crc16-finder-exe
         path: dist/find_crc16.exe  # 生成的exe文件路径
