@@ -11,24 +11,25 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    - uses: actions/checkout@v4  # 最新版
       with:
-        python-version: '3.9'
-    
+        clean: true  # 强制清理工作区，避免缓存影响
+
+    - uses: actions/setup-python@v5  # 最新版
+      with:
+        python-version: '3.12'  # 使用最新稳定版Python
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pyinstaller
-    
-    - name: Build EXE
-      run: |
-        pyinstaller --onefile find_crc16.py
-    
-    - name: Upload EXE artifact
-      uses: actions/upload-artifact@v3
+
+    - name: Build executable
+      run: pyinstaller --onefile find_crc16.py
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4  # 确保是v4，无其他版本引用
       with:
-        name: crc16-finder-exe
-        path: dist/find_crc16.exe
+        name: crc16-finder
+        path: ./dist/find_crc16.exe
+        if-no-files-found: error  # 文件不存在时明确报错
