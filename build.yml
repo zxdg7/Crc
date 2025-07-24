@@ -11,24 +11,31 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v4  # 更新到最新版本
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5  # 更新到最新版本
+    - name: Checkout code
+      uses: actions/checkout@v4  # 最新版本
       with:
-        python-version: '3.9'
-    
+        fetch-depth: 0  # 确保完整检出代码
+
+    - name: Set up Python
+      uses: actions/setup-python@v5  # 最新版本
+      with:
+        python-version: '3.11'  # 使用较新的稳定版本
+        cache: 'pip'  # 启用缓存加速依赖安装
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pyinstaller
-    
+        pip list  # 显示安装的包版本，便于调试
+
     - name: Build EXE
       run: |
-        pyinstaller --onefile find_crc16.py
-    
+        pyinstaller --onefile --name crc16-finder find_crc16.py  # 显式指定输出文件名
+        dir dist  # 显示构建结果，确认exe存在
+
     - name: Upload EXE artifact
-      uses: actions/upload-artifact@v4  # 关键更新：从v3改为v4
+      uses: actions/upload-artifact@v4  # 确保是v4
       with:
         name: crc16-finder-exe
-        path: dist/find_crc16.exe
+        path: dist/crc16-finder.exe
+        retention-days: 30  # 可选：设置 artifact 保留时间
